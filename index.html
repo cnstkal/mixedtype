@@ -62,11 +62,11 @@ button:active{transform:scale(.99)}
  .font-items{grid-template-columns:1fr}
 }
 
-/* Compact transparent poster area */
-.stage{width:min(78%,620px);aspect-ratio:auto;height:auto;margin:0 auto}
-#poster{aspect-ratio:auto;min-height:0;padding:28px 24px}
+/* Compact 1:1 poster area */
+.stage{width:min(78%,620px);aspect-ratio:1/1;height:auto;margin:0 auto}
+#poster{width:100%;height:100%;aspect-ratio:1/1;min-height:0;padding:28px 24px;box-sizing:border-box}
 .mixed-line{margin:0}
-@media(max-width:720px){.stage{width:86%}#poster{padding:22px 18px}}
+@media(max-width:720px){.stage{width:86%;aspect-ratio:1/1}#poster{padding:22px 18px}}
 </style>
 </head>
 <body>
