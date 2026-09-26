@@ -61,6 +61,12 @@ button:active{transform:scale(.99)}
  .actions .primary{grid-column:1/-1}
  .font-items{grid-template-columns:1fr}
 }
+
+/* Compact transparent poster area */
+.stage{width:min(78%,620px);aspect-ratio:auto;height:auto;margin:0 auto}
+#poster{aspect-ratio:auto;min-height:0;padding:28px 24px}
+.mixed-line{margin:0}
+@media(max-width:720px){.stage{width:86%}#poster{padding:22px 18px}}
 </style>
 </head>
 <body>
@@ -414,32 +420,24 @@ async function savePNG(){
  const btn=$('save');btn.disabled=true;btn.textContent='저장 중…';
  try{
   await document.fonts.ready;
-  const previewRect=poster.getBoundingClientRect();
-  const base=poster.getBoundingClientRect();
-  const scale=3;
-  const size=Math.max(1,Math.round(base.width*scale));
-  const c=document.createElement('canvas');c.width=size;c.height=size;
-  const x=c.getContext('2d');
-  x.clearRect(0,0,size,size);
-  x.textAlign='left';x.textBaseline='alphabetic';
   const posterRect=poster.getBoundingClientRect();
-  const line=poster.querySelector('.mixed-line');
-  const lineRect=line?line.getBoundingClientRect():posterRect;
-  const posterStyle=getComputedStyle(poster);
-  const offsetX=posterRect.left,offsetY=posterRect.top;
+  const scale=4;
+  const c=document.createElement('canvas');
+  c.width=Math.round(posterRect.width*scale);
+  c.height=Math.round(posterRect.height*scale);
+  const x=c.getContext('2d');
+  x.clearRect(0,0,c.width,c.height);
   segments.forEach(seg=>{
     const el=poster.querySelector('[data-index="'+seg.index+'"]');
     if(!el)return;
     const r=el.getBoundingClientRect();
     const cs=getComputedStyle(el);
-    const centerX=(r.left+r.width/2-offsetX)*scale;
-    const baselineY=(r.top+r.height*.78-offsetY)*scale;
+    const centerX=(r.left+r.width/2-posterRect.left)*scale;
+    const baselineY=(r.top+r.height*.78-posterRect.top)*scale;
     x.save();
     x.translate(centerX,baselineY);
-    const rotate=seg.rotate*Math.PI/180;
-    x.rotate(rotate);
-    const fontSize=parseFloat(cs.fontSize)*scale;
-    x.font=cs.fontStyle+' '+cs.fontWeight+' '+fontSize+'px "'+seg.font.family+'",sans-serif';
+    x.rotate(seg.rotate*Math.PI/180);
+    x.font=cs.fontStyle+' '+cs.fontWeight+' '+(parseFloat(cs.fontSize)*scale)+'px "'+seg.font.family+'",sans-serif';
     x.fillStyle=cs.color;
     x.textAlign='center';
     x.textBaseline='alphabetic';
@@ -449,12 +447,12 @@ async function savePNG(){
   const a=document.createElement('a');
   a.download='mixed-type.png';
   a.href=c.toDataURL('image/png');
-  a.style.display='none';document.body.appendChild(a);a.click();a.remove();
+  a.click();
  }catch(e){
   console.warn('PNG export failed',e);
-  alert('PNG 저장에 실패했어요. 잠시 후 다시 시도해 주세요.')
+  alert('PNG 저장에 실패했어요. 잠시 후 다시 시도해 주세요.');
  }finally{
-  btn.disabled=false;btn.textContent='PNG 저장'
+  btn.disabled=false;btn.textContent='PNG 저장';
  }
 }
 $('text').addEventListener('input',()=>{seed=Date.now();render()});
