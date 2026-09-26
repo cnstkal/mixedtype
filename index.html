@@ -63,12 +63,12 @@ button:active{transform:scale(.99)}
 }
 
 /* Compact 1:1 poster area */
-.stage{width:min(78%,620px);aspect-ratio:1/1;height:auto;margin:0 auto}
-#poster{width:100%;height:100%;aspect-ratio:1/1;min-height:0;padding:28px 10px;box-sizing:border-box}
+.stage{width:min(92%,720px);aspect-ratio:1/1;height:auto;margin:0 auto}
+#poster{width:100%;height:100%;aspect-ratio:1/1;min-height:0;padding:8% 2.5%;box-sizing:border-box}
 .mixed-line{margin:0}
 button{border-width:1px;font-weight:500}
 #reset{color:#1683ff}
-@media(max-width:720px){.stage{width:86%;aspect-ratio:1/1}#poster{padding:22px 8px}}
+@media(max-width:720px){.stage{width:92%;aspect-ratio:1/1}#poster{padding:8% 2%}}
 </style>
 </head>
 <body>
@@ -315,14 +315,13 @@ function render(){
  const rnd=mulberry32(seed);
  const count=+$('fontCount').value;
  const variation=+$('variation').value/100;
- currentFonts=pickFonts(usableCount,rnd);
  let parts=tokenize(text,$('split').value,rnd);
  const contentCount=Array.from(text).filter(ch=>!/\s/.test(ch)).length;
  const usableCount=Math.min(count,contentCount);
+ currentFonts=pickFonts(usableCount,rnd);
  if(usableCount<count){
    $('fontCount').value=usableCount;
- }
- segments=[];
+ } segments=[];
 
  // 공백만 있는 조각은 폰트를 배정하지 않고, 실제 글자 조각에는
  // 선택된 폰트를 최소 한 번씩 순환 배정한다.
