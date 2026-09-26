@@ -309,11 +309,12 @@ function render(){
  const rnd=mulberry32(seed);
  const count=+$('fontCount').value;
  const variation=+$('variation').value/100;
- currentFonts=pickFonts(count,rnd);
+ currentFonts=pickFonts(usableCount,rnd);
  let parts=tokenize(text,$('split').value,rnd);
- const nonSpaceCount=parts.filter(part=>part.trim()).length;
- if(nonSpaceCount<count){
-   parts=Array.from(text).map(ch=>ch);
+ const contentCount=Array.from(text).filter(ch=>!/\s/.test(ch)).length;
+ const usableCount=Math.min(count,contentCount);
+ if(usableCount<count){
+   $('fontCount').value=usableCount;
  }
  segments=[];
 
