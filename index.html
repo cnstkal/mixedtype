@@ -31,6 +31,15 @@ textarea{width:100%;min-height:110px;border:1px solid #ddd8d0;border-radius:15px
 textarea:focus,select:focus,input:focus{border-color:#111}
 .color-control{margin-top:10px}
 input[type=color]{display:block;width:100%;height:48px;margin-top:6px;padding:4px;border:1px solid #ddd8d0;border-radius:13px;background:#fff;cursor:pointer}
+.font-upload-box{margin-top:10px;border:1px solid #e5e0d7;border-radius:15px;padding:11px;background:#faf9f6}
+.font-upload-title{font-size:13px;font-weight:800;color:#333;margin-bottom:7px}
+.font-upload-row{display:grid;grid-template-columns:1fr 1.5fr;gap:8px}
+.font-upload-button{display:flex;align-items:center;justify-content:center;height:44px;border:1px solid #ddd8d0;border-radius:12px;background:#fff;color:#111;font-weight:700;cursor:pointer}
+.font-upload-button input{display:none}
+.font-upload-row select{margin-top:0;height:44px}
+.font-upload-status{font-size:11px;color:#888;margin-top:7px}
+.custom-font-items{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.custom-font-chip{font-size:11px;padding:5px 8px;border:1px solid #ddd8d0;border-radius:999px;background:#fff}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
 label{display:block;font-size:13px;color:#777;line-height:1.4}
 label.full{grid-column:1/-1}
@@ -94,6 +103,21 @@ button{border-width:1px;font-weight:500}
       <input id="textColor" type="color" value="#111111">
     </label>
 
+    <div class="font-upload-box">
+      <div class="font-upload-title">내 폰트</div>
+      <div class="font-upload-row">
+        <label class="font-upload-button">폰트 등록
+          <input id="fontInput" type="file" accept=".woff,.woff2,.ttf,.otf,font/woff,font/woff2,font/ttf,font/otf" multiple>
+        </label>
+        <select id="fontMode" aria-label="폰트 사용 범위">
+          <option value="all">전체 폰트에서 섞기</option>
+          <option value="custom">내 폰트만 섞기</option>
+        </select>
+      </div>
+      <div class="font-upload-status" id="fontUploadStatus">등록한 폰트는 기본 24시간 동안만 임시 보관돼.</div>
+      <div class="custom-font-items" id="customFontItems"></div>
+    </div>
+
     <div class="grid">
       <label>사용 폰트 수 <span class="val" id="fontCountVal">3개</span>
         <input id="fontCount" type="range" min="2" max="12" value="3">
@@ -136,7 +160,13 @@ const poster=$('poster'),empty=$('empty'),textEl=$('text');
 let restoring=false;
 let segments=[];
 let currentFonts=[];
+let customFonts=[];
+let fontMode='all';
 let seed=Date.now();
+const loadedFontStyles=new Set();
+const CUSTOM_DB='mixedtype-fonts-v1';
+const CUSTOM_STORE='fonts';
+const CUSTOM_TTL=24*60*60*1000;
 
 const FONTS=[
  {name:'Anton',family:'Anton',kind:'영문 condensed 산세리프',scripts:['latin'],weight:400,group:'sans-condensed'},
@@ -249,9 +279,10 @@ function mulberry32(a){return function(){let t=a+=0x6D2B79F5;t=Math.imul(t^t>>>1
 function detectScript(ch){
  return /[a-zA-Z0-9]/.test(ch)?'latin':'other';
 }
-function fontSupports(f,s){return f.scripts.includes('latin');}
+function fontSupports(f,s){return f.scripts.includes('latin')||f.source==='custom';}
 
 function fontFamilyGroup(f){
+ if(f.source==='custom')return 'custom-'+f.name;
  const g=f.group||'';
  // 이름이 달라도 시각적으로 같은 계열은 같은 그룹으로 취급한다.
  if(/^serif|slab|^trendy-serif|^classic-display|^serif-/.test(g)) return 'serif';
@@ -266,7 +297,8 @@ function fontFamilyGroup(f){
 }
 
 function pickFonts(count,rnd){
- const pool=[...FONTS],picked=[],usedFamilies=new Set();
+ const sourcePool=fontMode==='custom'?customFonts:FONTS;
+ const pool=[...sourcePool],picked=[],usedFamilies=new Set();
 
  // 큰 계열은 중복하지 않는다. 단, 필기체는 종류가 워낙 많으므로
  // 한 번의 조합에서 필기체가 여러 개 들어가지는 않도록 한다.
@@ -281,6 +313,118 @@ function pickFonts(count,rnd){
    pool.splice(pool.indexOf(f),1);
  }
  return picked;
+}
+function openCustomDB(){
+ return new Promise((resolve,reject)=>{
+   const req=indexedDB.open(CUSTOM_DB,1);
+   req.onupgradeneeded=()=>req.result.createObjectStore(CUSTOM_STORE,{keyPath:'id'});
+   req.onsuccess=()=>resolve(req.result);
+   req.onerror=()=>reject(req.error);
+ });
+}
+async function customDBPut(item){
+ const db=await openCustomDB();
+ return new Promise((resolve,reject)=>{
+   const tx=db.transaction(CUSTOM_STORE,'readwrite');
+   tx.objectStore(CUSTOM_STORE).put(item);
+   tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);
+ });
+}
+async function customDBAll(){
+ const db=await openCustomDB();
+ return new Promise((resolve,reject)=>{
+   const tx=db.transaction(CUSTOM_STORE,'readonly');
+   const req=tx.objectStore(CUSTOM_STORE).getAll();
+   req.onsuccess=()=>resolve(req.result||[]);
+   req.onerror=()=>reject(req.error);
+ });
+}
+async function customDBDelete(id){
+ const db=await openCustomDB();
+ return new Promise((resolve,reject)=>{
+   const tx=db.transaction(CUSTOM_STORE,'readwrite');
+   tx.objectStore(CUSTOM_STORE).delete(id);
+   tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);
+ });
+}
+function familyFromFilename(name){
+ return (name.replace(/\.[^.]+$/,'').replace(/[^a-zA-Z0-9가-힣 _-]/g,'').trim()||'My Font')+' '+Math.random().toString(36).slice(2,7);
+}
+async function registerFontFace(font){
+ try{
+   const face=new FontFace(font.family,'url("'+font.url+'")');
+   await face.load();document.fonts.add(face);return true;
+ }catch(e){console.warn('Font load failed',font.name,e);return false}
+}
+async function loadFontStyle(font){
+ if(font.source==='custom'||loadedFontStyles.has(font.family))return;
+ loadedFontStyles.add(font.family);
+ const href='https://fonts.googleapis.com/css2?family='+encodeURIComponent(font.family).replace(/%20/g,'+')+'&display=swap';
+ const link=document.createElement('link');link.rel='stylesheet';link.href=href;
+ document.head.appendChild(link);
+}
+async function loadGoogleCatalog(){
+ try{
+   const res=await fetch('./fonts.json',{cache:'force-cache'});
+   if(!res.ok)return;
+   const list=await res.json();
+   const existing=new Set(FONTS.map(f=>f.family));
+   list.forEach(item=>{
+     if(!item.family||existing.has(item.family)||!item.subsets?.includes('latin'))return;
+     const cat=item.category||'sans-serif';
+     const group=cat==='serif'?'serif':cat==='handwriting'?'script':cat==='monospace'?'mono':cat==='display'?'display':'sans';
+     const weight=item.variants?.map(v=>parseInt(v,10)).filter(Number.isFinite).sort((a,b)=>b-a)[0]||400;
+     FONTS.push({name:item.family,family:item.family,kind:'Google Fonts · '+cat,scripts:['latin'],weight,group,source:'google'});
+     existing.add(item.family);
+   });
+   const status=$('fontUploadStatus');
+   if(status)status.textContent='Google Fonts 라이브러리까지 포함해 사용할 수 있어.';
+   render();
+ }catch(e){console.warn('Google font catalog failed',e)}
+}
+function updateCustomFontUI(){
+ const box=$('customFontItems');if(!box)return;
+ box.innerHTML='';
+ customFonts.forEach(f=>{
+   const chip=document.createElement('span');chip.className='custom-font-chip';chip.textContent=f.name;box.appendChild(chip);
+ });
+ const status=$('fontUploadStatus');
+ if(status)status.textContent=customFonts.length?customFonts.length+'개 내 폰트 등록됨 · 24시간 후 자동 삭제':'등록한 폰트는 기본 24시간 동안만 임시 보관돼.';
+}
+async function loadCustomFonts(){
+ try{
+   const now=Date.now(),items=await customDBAll();
+   customFonts=[];
+   for(const item of items){
+     if(item.expiresAt<=now){await customDBDelete(item.id);continue}
+     let url=item.url;
+     if(item.buffer){url=URL.createObjectURL(new Blob([item.buffer],{type:item.mime||'font/woff2'}));item.url=url}
+     if(await registerFontFace({...item,url})){
+       customFonts.push({...item,url});
+     }
+   }
+   updateCustomFontUI();
+   if(fontMode==='custom')render();
+ }catch(e){console.warn('Custom font restore failed',e)}
+}
+async function uploadCustomFont(file){
+ const max=4*1024*1024;
+ if(file.size>max)throw new Error('폰트 파일은 4MB 이하만 등록할 수 있어.');
+ const expiresAt=Date.now()+CUSTOM_TTL;
+ const serverName=encodeURIComponent(file.name);
+ try{
+   const res=await fetch('./api/font-upload?filename='+serverName,{method:'POST',headers:{'Content-Type':file.type||'application/octet-stream'},body:file});
+   if(res.ok){
+     const data=await res.json();
+     const font={id:data.id,name:file.name.replace(/\.[^.]+$/,''),family:data.family,url:data.url,expiresAt:data.expiresAt,mime:file.type||'font/woff2',source:'custom'};
+     if(await registerFontFace(font)){customFonts.push(font);await customDBPut(font);return}
+   }
+ }catch(e){console.warn('Server font upload unavailable; using temporary browser storage.',e)}
+ const id=crypto.randomUUID();
+ const buffer=await file.arrayBuffer();
+ const url=URL.createObjectURL(file);
+ const font={id,name:file.name.replace(/\.[^.]+$/,''),family:familyFromFilename(file.name),url,buffer,expiresAt,mime:file.type||'font/woff2',source:'custom'};
+ if(await registerFontFace(font)){customFonts.push(font);await customDBPut(font)}
 }
 function tokenize(text,mode,rnd){
  const chars=Array.from(text),out=[];
@@ -322,8 +466,10 @@ function render(){
  const variation=+$('variation').value/100;
  let parts=tokenize(text,$('split').value,rnd);
  const contentCount=Array.from(text).filter(ch=>!/\s/.test(ch)).length;
- const usableCount=Math.min(count,contentCount);
+ const poolCount=(fontMode==='custom'?customFonts:FONTS).length;
+ const usableCount=Math.min(count,contentCount,poolCount);
  currentFonts=pickFonts(usableCount,rnd);
+ currentFonts.forEach(loadFontStyle);
  if(usableCount<count){
    $('fontCount').value=usableCount;
  }
@@ -471,6 +617,18 @@ async function savePNG(){
 }
 $('text').addEventListener('input',()=>{seed=Date.now();render()});
 $('textColor').addEventListener('input',render);
+$('fontMode').addEventListener('change',e=>{fontMode=e.target.value;render()});
+$('fontInput').addEventListener('change',async e=>{
+ const files=[...e.target.files];
+ if(!files.length)return;
+ const status=$('fontUploadStatus');status.textContent='폰트 등록 중…';
+ try{
+   for(const file of files)await uploadCustomFont(file);
+   updateCustomFontUI();
+   if(fontMode==='custom')render();
+ }catch(err){alert(err.message||'폰트 등록에 실패했어.')}
+ e.target.value='';
+});
 ['fontCount','split','variation','size'].forEach(id=>{
  $(id).addEventListener('input',()=>{labels();render()});
  $(id).addEventListener('change',()=>{labels();render()});
@@ -490,6 +648,8 @@ $('reset').addEventListener('click',()=>{
 });
 $('save').addEventListener('click',savePNG);
 labels();render();
+loadCustomFonts();
+loadGoogleCatalog();
 </script>
 </body>
 </html>
