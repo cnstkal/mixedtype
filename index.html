@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=ABeeZee&family=Abril+Fatface&family=Alfa+Slab+One&family=Anton&family=Archivo+Black&family=Bebas+Neue&family=Bodoni+Moda&family=Bowlby+One+SC&family=Bungee&family=Bungee+Shade&family=Caveat&family=Cinzel&family=Comic+Neue&family=Cormorant+Garamond&family=DM+Mono&family=DM+Serif+Display&family=Dancing+Script&family=Fira+Mono&family=Fraunces&family=Gloock&family=IBM+Plex+Mono&family=IBM+Plex+Sans&family=Josefin+Sans&family=Kanit&family=Lato&family=Libre+Baskerville&family=Lobster&family=Manrope&family=Montserrat&family=Major+Mono+Display&family=Merriweather&family=Monoton&family=Nunito&family=Nunito+Sans&family=Orbitron&family=Oswald&family=Pacifico&family=Permanent+Marker&family=Playfair+Display&family=Press+Start+2P&family=Quicksand&family=Righteous&family=Rajdhani&family=Raleway&family=Roboto+Mono&family=Rubik&family=Rubik+Mono+One&family=Satisfy&family=Share+Tech+Mono&family=Silkscreen&family=Space+Grotesk&family=Special+Elite&family=Syne&family=Unbounded&family=Urbanist&family=Varela+Round&family=Work+Sans&family=Yellowtail&family=Archivo+Narrow&family=Nanum+Pen+Script&family=Noto+Sans+Display&family=Noto+Serif+Display&family=Allura&family=Alex+Brush&family=Amatic+SC&family=Bad+Script&family=Berkshire+Swash&family=Cookie&family=Courgette&family=Damion&family=Great+Vibes&family=Herr+Von+Muellerhoff&family=Italianno&family=Kaushan+Script&family=Marck+Script&family=Merienda&family=Mr+Dafoe&family=Nothing+You+Could+Do&family=Parisienne&family=Patrick+Hand&family=Petit+Formal+Script&family=Pinyon+Script&family=Rouge+Script&family=Sacramento&family=Shadows+Into+Light&family=Shadows+Into+Light+Two&family=Tangerine&family=The+Girl+Next+Door&family=Tillana&family=Zeyada&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;600;700&family=DM+Sans:wght@400;600;700&family=Figtree:wght@400;600;700&family=Outfit:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;600;700&family=Sora:wght@400;600;700&family=Space+Mono:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600;700&family=Archivo:wght@400;600;700&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;600;700&family=Cabin:wght@400;600;700&family=Comfortaa:wght@400;600;700&family=Karla:wght@400;600;700&family=Lexend:wght@400;600;700&family=Lora:wght@400;600;700&family=M+PLUS+1p:wght@400;600;700&family=Noto+Sans:wght@400;600;700&family=Noto+Serif:wght@400;600;700&family=Playwrite+US+Modern:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:#f7f6f2;color:#151515;font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -16,10 +17,10 @@ main{width:min(980px,100%);margin:0 auto;padding:22px 14px 32px}
 h1{font-size:25px;line-height:1.1;margin:0;font-weight:900;letter-spacing:-.05em;text-transform:uppercase}
 #homeNav{flex:0 0 42px;width:42px;height:42px;margin:0;border:1px solid #ddd8d0;border-radius:12px;background:#fff;font:700 18px Pretendard,sans-serif;color:#111;box-shadow:0 3px 12px rgba(0,0,0,.08)}
 .card{background:#fff;border:1px solid #e6e2da;border-radius:22px;padding:12px;box-shadow:0 2px 10px rgba(0,0,0,.035);margin-bottom:12px}
-.stage{width:100%;aspect-ratio:1/1;min-height:0;background:#f4f1e9;border-radius:17px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
+.stage{width:min(78%,720px);margin:0 auto;aspect-ratio:1/1;min-height:0;background:#f4f1e9;border-radius:17px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
 .poster{width:100%;height:100%;padding:8% 7%;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
 .poster-meta{font:700 10px/1.2 "DM Mono",monospace;letter-spacing:.12em;text-transform:uppercase;display:flex;justify-content:space-between;margin-bottom:5%}
-.mixed-line{display:block;line-height:.92;word-break:normal;white-space:pre-wrap;text-align:left}
+.mixed-line{display:block;width:100%;line-height:.92;word-break:normal;white-space:pre-wrap;text-align:center}
 .seg{display:inline-block;white-space:pre-wrap;transform-origin:center bottom;transition:filter .15s,opacity .15s,transform .15s;cursor:pointer}
 .seg:hover,.seg.active{filter:invert(1);opacity:.88}
 .poster-foot{display:none}
@@ -52,7 +53,8 @@ button:active{transform:scale(.99)}
 .font-script{font-size:10px;opacity:.6;margin-top:1px}
 .note{font-size:12px;color:#888;line-height:1.5;margin-top:9px}
 @media(max-width:720px){
- main{padding:62px 10px 24px}
+ main{padding:22px 10px 24px}
+ .stage{width:88%}
  h1{font-size:23px}
  .stage{min-height:0}
  .grid{grid-template-columns:1fr 1fr}
@@ -83,7 +85,7 @@ button:active{transform:scale(.99)}
 
     <div class="grid">
       <label>사용 폰트 수 <span class="val" id="fontCountVal">3개</span>
-        <input id="fontCount" type="range" min="2" max="8" value="3">
+        <input id="fontCount" type="range" min="2" max="12" value="3">
       </label>
       <label>분할 방식
         <select id="split">
@@ -112,7 +114,7 @@ button:active{transform:scale(.99)}
         <span id="segmentCount">0개</span>
       </div>
       <div class="font-items" id="fontItems"></div>
-      <div class="note">한 문장 안에서도 글자·단어 단위로 폰트가 바뀌며, 아래 항목을 누르면 해당 부분이 강조돼요.</div>
+      
     </div>
   </section>
 </main>
@@ -208,6 +210,26 @@ const FONTS=[
  {name:'Montserrat',family:'Montserrat',kind:'영문 클래식 기하학 산세리프',scripts:['latin'],weight:800,group:'sans-montserrat'},
  {name:'Noto Sans Display',family:'Noto Sans Display',kind:'영문 디스플레이 산세리프',scripts:['latin'],weight:800,group:'sans-display'},
  {name:'Noto Serif Display',family:'Noto Serif Display',kind:'영문 디스플레이 세리프',scripts:['latin'],weight:800,group:'serif-display-noto'},
+ {name:'Bitter',family:'Bitter',kind:'강한 세리프',scripts:['latin'],weight:700,group:'serif-bitter'},
+ {name:'DM Sans',family:'DM Sans',kind:'현대 산세리프',scripts:['latin'],weight:700,group:'sans-dm'},
+ {name:'Figtree',family:'Figtree',kind:'모던 산세리프',scripts:['latin'],weight:700,group:'sans-figtree'},
+ {name:'Outfit',family:'Outfit',kind:'기하학 산세리프',scripts:['latin'],weight:700,group:'sans-outfit'},
+ {name:'Plus Jakarta Sans',family:'Plus Jakarta Sans',kind:'현대 산세리프',scripts:['latin'],weight:700,group:'sans-jakarta'},
+ {name:'Sora',family:'Sora',kind:'기하학 디스플레이',scripts:['latin'],weight:700,group:'sans-sora'},
+ {name:'Space Mono',family:'Space Mono',kind:'모노스페이스',scripts:['latin'],weight:700,group:'mono-space'},
+ {name:'IBM Plex Mono',family:'IBM Plex Mono',kind:'모노스페이스',scripts:['latin'],weight:600,group:'mono-plex'},
+ {name:'Archivo',family:'Archivo',kind:'에디토리얼 산세리프',scripts:['latin'],weight:700,group:'sans-archivo'},
+ {name:'Barlow Condensed',family:'Barlow Condensed',kind:'압축 산세리프',scripts:['latin'],weight:700,group:'condensed-barlow'},
+ {name:'Barlow',family:'Barlow',kind:'현대 산세리프',scripts:['latin'],weight:700,group:'sans-barlow'},
+ {name:'Cabin',family:'Cabin',kind:'깔끔한 산세리프',scripts:['latin'],weight:700,group:'sans-cabin'},
+ {name:'Comfortaa',family:'Comfortaa',kind:'둥근 산세리프',scripts:['latin'],weight:700,group:'rounded-comfortaa'},
+ {name:'Karla',family:'Karla',kind:'캐주얼 산세리프',scripts:['latin'],weight:700,group:'sans-karla'},
+ {name:'Lexend',family:'Lexend',kind:'가독성 산세리프',scripts:['latin'],weight:700,group:'sans-lexend'},
+ {name:'Lora',family:'Lora',kind:'고전 세리프',scripts:['latin'],weight:700,group:'serif-lora'},
+ {name:'M PLUS 1p',family:'M PLUS 1p',kind:'일본어 산세리프',scripts:['latin'],weight:700,group:'sans-mplus'},
+ {name:'Noto Sans',family:'Noto Sans',kind:'범용 산세리프',scripts:['latin'],weight:700,group:'sans-noto'},
+ {name:'Noto Serif',family:'Noto Serif',kind:'범용 세리프',scripts:['latin'],weight:700,group:'serif-noto'},
+ {name:'Playwrite US Modern',family:'Playwrite US Modern',kind:'손글씨 디스플레이',scripts:['latin'],weight:400,group:'script-playwrite'},
 ];
 
 
@@ -288,7 +310,11 @@ function render(){
  const count=+$('fontCount').value;
  const variation=+$('variation').value/100;
  currentFonts=pickFonts(count,rnd);
- const parts=tokenize(text,$('split').value,rnd);
+ let parts=tokenize(text,$('split').value,rnd);
+ const nonSpaceCount=parts.filter(part=>part.trim()).length;
+ if(nonSpaceCount<count){
+   parts=Array.from(text).map(ch=>ch);
+ }
  segments=[];
 
  // 공백만 있는 조각은 폰트를 배정하지 않고, 실제 글자 조각에는
