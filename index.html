@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>mixed type</title>
+<title>MIXED TYPE</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=ABeeZee&family=Abril+Fatface&family=Alfa+Slab+One&family=Anton&family=Archivo+Black&family=Bebas+Neue&family=Bodoni+Moda&family=Bowlby+One+SC&family=Bungee&family=Bungee+Shade&family=Caveat&family=Cinzel&family=Comic+Neue&family=Cormorant+Garamond&family=DM+Mono&family=DM+Serif+Display&family=Dancing+Script&family=Fira+Mono&family=Fraunces&family=Gloock&family=IBM+Plex+Mono&family=IBM+Plex+Sans&family=Josefin+Sans&family=Kanit&family=Lato&family=Libre+Baskerville&family=Lobster&family=Manrope&family=Montserrat&family=Major+Mono+Display&family=Merriweather&family=Monoton&family=Nunito&family=Nunito+Sans&family=Orbitron&family=Oswald&family=Pacifico&family=Permanent+Marker&family=Playfair+Display&family=Press+Start+2P&family=Quicksand&family=Righteous&family=Rajdhani&family=Raleway&family=Roboto+Mono&family=Rubik&family=Rubik+Mono+One&family=Satisfy&family=Share+Tech+Mono&family=Silkscreen&family=Space+Grotesk&family=Special+Elite&family=Syne&family=Unbounded&family=Urbanist&family=Varela+Round&family=Work+Sans&family=Yellowtail&family=Archivo+Narrow&family=Nanum+Pen+Script&family=Noto+Sans+Display&family=Noto+Serif+Display&family=Allura&family=Alex+Brush&family=Amatic+SC&family=Bad+Script&family=Berkshire+Swash&family=Cookie&family=Courgette&family=Damion&family=Great+Vibes&family=Herr+Von+Muellerhoff&family=Italianno&family=Kaushan+Script&family=Marck+Script&family=Merienda&family=Mr+Dafoe&family=Nothing+You+Could+Do&family=Parisienne&family=Patrick+Hand&family=Petit+Formal+Script&family=Pinyon+Script&family=Rouge+Script&family=Sacramento&family=Shadows+Into+Light&family=Shadows+Into+Light+Two&family=Tangerine&family=The+Girl+Next+Door&family=Tillana&family=Zeyada&display=swap" rel="stylesheet">
@@ -11,7 +11,7 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:#f7f6f2;color:#151515;font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 body{overscroll-behavior-x:none}
-main{width:min(980px,100%);margin:0 auto;padding:68px 14px 32px}
+main{width:min(980px,100%);margin:0 auto;padding:22px 14px 32px}
 .pageTitle{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 h1{font-size:25px;line-height:1.1;margin:0;font-weight:900;letter-spacing:-.05em;text-transform:uppercase}
 #homeNav{flex:0 0 42px;width:42px;height:42px;margin:0;border:1px solid #ddd8d0;border-radius:12px;background:#fff;font:700 18px Pretendard,sans-serif;color:#111;box-shadow:0 3px 12px rgba(0,0,0,.08)}
@@ -66,7 +66,7 @@ button:active{transform:scale(.99)}
 <main>
   <div class="pageTitle">
     <button id="homeNav" aria-label="홈으로" onclick="location.href='index.html'">⌂</button>
-    <h1>mixed type</h1>
+    <h1>MIXED TYPE</h1>
   </div>
 
   <section class="card">
@@ -120,6 +120,7 @@ button:active{transform:scale(.99)}
 <script>
 const $=id=>document.getElementById(id);
 const poster=$('poster'),empty=$('empty'),textEl=$('text');
+let restoring=false;
 let segments=[];
 let currentFonts=[];
 let seed=Date.now();
@@ -385,6 +386,8 @@ function labels(){
 
 async function savePNG(){
  if(!segments.length)return;
+ const btn=$('save');btn.disabled=true;btn.textContent='저장 중…';
+ try{
  await document.fonts.ready;
  const size=1200;
  const c=document.createElement('canvas');c.width=size;c.height=size;
@@ -413,7 +416,8 @@ async function savePNG(){
  }
  if(row.length)drawRow();
  const a=document.createElement('a');
- a.download='mixed-type.png';a.href=c.toDataURL('image/png');a.click();
+ a.download='mixed-type.png';a.href=c.toDataURL('image/png');a.style.display='none';document.body.appendChild(a);a.click();a.remove();
+ }catch(e){console.warn('PNG export failed',e);alert('PNG 저장에 실패했어요. 잠시 후 다시 시도해 주세요.')}finally{btn.disabled=false;btn.textContent='PNG 저장'}
 }
 
 $('text').addEventListener('input',()=>{seed=Date.now();render()});
