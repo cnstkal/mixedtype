@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>mixed type</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=ABeeZee&family=Abril+Fatface&family=Alfa+Slab+One&family=Anton&family=Archivo+Black&family=Bebas+Neue&family=Bodoni+Moda&family=Bowlby+One+SC&family=Bungee&family=Bungee+Shade&family=Caveat&family=Cinzel&family=Comic+Neue&family=Cormorant+Garamond&family=DM+Mono&family=DM+Serif+Display&family=Dancing+Script&family=Fira+Mono&family=Fraunces&family=Gloock&family=IBM+Plex+Mono&family=IBM+Plex+Sans&family=Josefin+Sans&family=Kanit&family=Lato&family=Libre+Baskerville&family=Lobster&family=Manrope&family=Montserrat&family=Major+Mono+Display&family=Merriweather&family=Monoton&family=Nunito&family=Nunito+Sans&family=Orbitron&family=Oswald&family=Pacifico&family=Permanent+Marker&family=Playfair+Display&family=Press+Start+2P&family=Quicksand&family=Righteous&family=Rajdhani&family=Raleway&family=Roboto+Mono&family=Rubik&family=Rubik+Mono+One&family=Satisfy&family=Share+Tech+Mono&family=Silkscreen&family=Space+Grotesk&family=Special+Elite&family=Syne&family=Unbounded&family=Urbanist&family=Varela+Round&family=Work+Sans&family=Yellowtail&family=Archivo+Narrow&family=Nanum+Pen+Script&family=Noto+Sans+Display&family=Noto+Serif+Display&family=Allura&family=Alex+Brush&family=Amatic+SC&family=Bad+Script&family=Berkshire+Swash&family=Cookie&family=Courgette&family=Damion&family=Great+Vibes&family=Herr+Von+Muellerhoff&family=Italianno&family=Kaushan+Script&family=Marck+Script&family=Merienda&family=Mr+Dafoe&family=Nothing+You+Could+Do&family=Parisienne&family=Patrick+Hand&family=Petit+Formal+Script&family=Pinyon+Script&family=Rouge+Script&family=Sacramento&family=Shadows+Into+Light&family=Shadows+Into+Light+Two&family=Tangerine&family=The+Girl+Next+Door&family=Tillana&family=Zeyada&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:#f7f6f2;color:#151515;font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{overscroll-behavior-x:none}
+main{width:min(980px,100%);margin:0 auto;padding:68px 14px 32px}
+.pageTitle{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+h1{font-size:25px;line-height:1.1;margin:0;font-weight:900;letter-spacing:-.05em;text-transform:uppercase}
+#homeNav{flex:0 0 42px;width:42px;height:42px;margin:0;border:1px solid #ddd8d0;border-radius:12px;background:#fff;font:700 18px Pretendard,sans-serif;color:#111;box-shadow:0 3px 12px rgba(0,0,0,.08)}
+.card{background:#fff;border:1px solid #e6e2da;border-radius:22px;padding:12px;box-shadow:0 2px 10px rgba(0,0,0,.035);margin-bottom:12px}
+.stage{width:100%;aspect-ratio:1/1;min-height:0;background:#f4f1e9;border-radius:17px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
+.poster{width:100%;height:100%;padding:8% 7%;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+.poster-meta{font:700 10px/1.2 "DM Mono",monospace;letter-spacing:.12em;text-transform:uppercase;display:flex;justify-content:space-between;margin-bottom:5%}
+.mixed-line{display:block;line-height:.92;word-break:normal;white-space:pre-wrap;text-align:left}
+.seg{display:inline-block;white-space:pre-wrap;transform-origin:center bottom;transition:filter .15s,opacity .15s,transform .15s;cursor:pointer}
+.seg:hover,.seg.active{filter:invert(1);opacity:.88}
+.poster-foot{display:none}
+.poster-foot small{font:700 9px/1.3 "DM Mono",monospace;letter-spacing:.08em}
+.empty{color:#777;text-align:center;font-size:14px;padding:20px}
+.upload{display:flex;align-items:center;justify-content:center;min-height:64px;border:1px dashed #cfcac0;border-radius:16px;cursor:pointer;font-size:16px;font-weight:700;margin-bottom:12px}
+.upload input{display:none}
+textarea{width:100%;min-height:110px;border:1px solid #ddd8d0;border-radius:15px;background:#fff;padding:14px;font:600 17px/1.5 Pretendard,sans-serif;resize:vertical;outline:none}
+textarea:focus,select:focus,input:focus{border-color:#111}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+label{display:block;font-size:13px;color:#777;line-height:1.4}
+label.full{grid-column:1/-1}
+select,input[type=range]{width:100%;margin-top:6px}
+select{height:48px;border:1px solid #ddd8d0;border-radius:13px;background:#fff;padding:0 12px;font-size:16px;color:#181818}
+input[type=range]{accent-color:#111}
+.val{float:right;color:#111;font-weight:800}
+.actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px}
+button.action{height:50px;border:1px solid #ddd8d0;border-radius:14px;background:#fff;font-size:15px;font-weight:800}
+button.primary{background:#111;color:#fff;border-color:#111}
+button:active{transform:scale(.99)}
+.font-list{margin-top:12px;border-top:1px solid #ece8e0;padding-top:12px}
+.font-list-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-weight:850;font-size:14px}
+.font-items{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.font-item{display:flex;align-items:center;gap:8px;padding:9px 10px;border:1px solid #e5e0d7;border-radius:11px;background:#fff;min-width:0;cursor:pointer}
+.font-item.active{border-color:#111;background:#111;color:#fff}
+.font-num{width:22px;height:22px;border-radius:50%;background:#eee;display:grid;place-items:center;flex:none;font:700 10px "DM Mono",monospace}
+.font-item.active .font-num{background:#fff;color:#111}
+.font-info{min-width:0}
+.font-name{font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.font-script{font-size:10px;opacity:.6;margin-top:1px}
+.note{font-size:12px;color:#888;line-height:1.5;margin-top:9px}
+@media(max-width:720px){
+ main{padding:62px 10px 24px}
+ h1{font-size:23px}
+ .stage{min-height:0}
+ .grid{grid-template-columns:1fr 1fr}
+ .actions{grid-template-columns:1fr 1fr}
+ .actions .primary{grid-column:1/-1}
+ .font-items{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<main>
+  <div class="pageTitle">
+    <button id="homeNav" aria-label="홈으로" onclick="location.href='index.html'">⌂</button>
+    <h1>mixed type</h1>
+  </div>
+
+  <section class="card">
+    <div class="stage" id="stage">
+      <div class="empty" id="empty"></div>
+      <div class="poster" id="poster" hidden></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <label class="full">문구
+      <textarea id="text" placeholder="예: STRANGE WORLD / 이상한 세계 / 不思議な世界 / 奇怪的世界">STRANGE WORLD</textarea>
+    </label>
+
+    <div class="grid">
+      <label>사용 폰트 수 <span class="val" id="fontCountVal">3개</span>
+        <input id="fontCount" type="range" min="2" max="8" value="3">
+      </label>
+      <label>분할 방식
+        <select id="split">
+          <option value="mixed">문자 혼합</option>
+          <option value="word">단어 중심</option>
+          <option value="balanced" selected>균형 혼합</option>
+        </select>
+      </label>
+      <label>랜덤 변형 <span class="val" id="variationVal">0%</span>
+        <input id="variation" type="range" min="0" max="100" value="0">
+      </label>
+      <label>글자 크기 <span class="val" id="sizeVal">100%</span>
+        <input id="size" type="range" min="70" max="135" value="100">
+      </label>
+    </div>
+
+    <div class="actions">
+      <button class="action" id="reset">초기화</button>
+      <button class="action" id="random">폰트 다시 섞기</button>
+      <button class="action primary" id="save">PNG 저장</button>
+    </div>
+
+    <div class="font-list">
+      <div class="font-list-title">
+        <span>사용된 폰트 / 적용된 부분</span>
+        <span id="segmentCount">0개</span>
+      </div>
+      <div class="font-items" id="fontItems"></div>
+      <div class="note">한 문장 안에서도 글자·단어 단위로 폰트가 바뀌며, 아래 항목을 누르면 해당 부분이 강조돼요.</div>
+    </div>
+  </section>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+const poster=$('poster'),empty=$('empty'),textEl=$('text');
+let segments=[];
+let currentFonts=[];
+let seed=Date.now();
+
+const FONTS=[
+ {name:'Anton',family:'Anton',kind:'영문 condensed 산세리프',scripts:['latin'],weight:400,group:'sans-condensed'},
+ {name:'Bebas Neue',family:'Bebas Neue',kind:'영문 condensed 산세리프',scripts:['latin'],weight:400,group:'sans-condensed'},
+ {name:'Archivo Black',family:'Archivo Black',kind:'영문 블랙 산세리프',scripts:['latin'],weight:400,group:'sans-black'},
+ {name:'Abril Fatface',family:'Abril Fatface',kind:'영문 디스플레이 세리프',scripts:['latin'],weight:400,group:'serif-display'},
+ {name:'Bodoni Moda',family:'Bodoni Moda',kind:'영문 패션 세리프',scripts:['latin'],weight:700,group:'serif-fashion'},
+ {name:'Playfair Display',family:'Playfair Display',kind:'영문 클래식 세리프',scripts:['latin'],weight:700,group:'serif-classic'},
+ {name:'Cormorant Garamond',family:'Cormorant Garamond',kind:'영문 우아한 세리프',scripts:['latin'],weight:700,group:'serif-garamond'},
+ {name:'Libre Baskerville',family:'Libre Baskerville',kind:'영문 본문 세리프',scripts:['latin'],weight:700,group:'serif-book'},
+ {name:'Oswald',family:'Oswald',kind:'영문 condensed 산세리프',scripts:['latin'],weight:700,group:'sans-condensed'},
+ {name:'Space Grotesk',family:'Space Grotesk',kind:'영문 기하학 산세리프',scripts:['latin'],weight:700,group:'sans-grotesk'},
+ {name:'Unbounded',family:'Unbounded',kind:'영문 미래형',scripts:['latin'],weight:700,group:'sans-futuristic'},
+ {name:'DM Mono',family:'DM Mono',kind:'영문 모노스페이스',scripts:['latin'],weight:500,group:'mono'},
+ {name:'Pacifico',family:'Pacifico',kind:'영문 스크립트',scripts:['latin'],weight:400,group:'script'},
+ {name:'Caveat',family:'Caveat',kind:'영문 손글씨',scripts:['latin'],weight:700,group:'handwriting'},
+ {name:'Comic Neue',family:'Comic Neue',kind:'영문 캐주얼',scripts:['latin'],weight:700,group:'casual'},
+ {name:'Allura',family:'Allura',kind:'우아한 필기체',scripts:['latin'],weight:400,group:'script'},
+ {name:'Alex Brush',family:'Alex Brush',kind:'고급 브러시 필기체',scripts:['latin'],weight:400,group:'script'},
+ {name:'Amatic SC',family:'Amatic SC',kind:'손글씨 디스플레이',scripts:['latin'],weight:700,group:'script'},
+ {name:'Bad Script',family:'Bad Script',kind:'자연스러운 필기체',scripts:['latin'],weight:400,group:'script'},
+ {name:'Berkshire Swash',family:'Berkshire Swash',kind:'장식 필기체',scripts:['latin'],weight:400,group:'script'},
+ {name:'Cookie',family:'Cookie',kind:'부드러운 스크립트',scripts:['latin'],weight:400,group:'script'},
+ {name:'Courgette',family:'Courgette',kind:'캐주얼 필기체',scripts:['latin'],weight:400,group:'script'},
+ {name:'Damion',family:'Damion',kind:'레트로 필기체',scripts:['latin'],weight:400,group:'script'},
+ {name:'Great Vibes',family:'Great Vibes',kind:'우아한 캘리그래피',scripts:['latin'],weight:400,group:'script'},
+ {name:'Herr Von Muellerhoff',family:'Herr Von Muellerhoff',kind:'가느다란 캘리그래피',scripts:['latin'],weight:400,group:'script'},
+ {name:'Italianno',family:'Italianno',kind:'이탈리안 캘리그래피',scripts:['latin'],weight:400,group:'script'},
+ {name:'Kaushan Script',family:'Kaushan Script',kind:'브러시 스크립트',scripts:['latin'],weight:400,group:'script'},
+ {name:'Marck Script',family:'Marck Script',kind:'러시아풍 필기체',scripts:['latin'],weight:400,group:'script'},
+ {name:'Merienda',family:'Merienda',kind:'둥근 손글씨',scripts:['latin'],weight:700,group:'script'},
+ {name:'Mr Dafoe',family:'Mr Dafoe',kind:'브러시 사인체',scripts:['latin'],weight:400,group:'script'},
+ {name:'Nothing You Could Do',family:'Nothing You Could Do',kind:'자유로운 손글씨',scripts:['latin'],weight:400,group:'script'},
+ {name:'Parisienne',family:'Parisienne',kind:'프렌치 필기체',scripts:['latin'],weight:400,group:'script'},
+ {name:'Patrick Hand',family:'Patrick Hand',kind:'자연스러운 손글씨',scripts:['latin'],weight:400,group:'script'},
+ {name:'Petit Formal Script',family:'Petit Formal Script',kind:'얇은 포멀 스크립트',scripts:['latin'],weight:400,group:'script'},
+ {name:'Pinyon Script',family:'Pinyon Script',kind:'고전 캘리그래피',scripts:['latin'],weight:400,group:'script'},
+ {name:'Rouge Script',family:'Rouge Script',kind:'얇은 우아한 스크립트',scripts:['latin'],weight:400,group:'script'},
+ {name:'Sacramento',family:'Sacramento',kind:'사인 필기체',scripts:['latin'],weight:400,group:'script'},
+ {name:'Shadows Into Light',family:'Shadows Into Light',kind:'가벼운 손글씨',scripts:['latin'],weight:400,group:'script'},
+ {name:'Shadows Into Light Two',family:'Shadows Into Light Two',kind:'캐주얼 손글씨',scripts:['latin'],weight:400,group:'script'},
+ {name:'Tangerine',family:'Tangerine',kind:'가느다란 캘리그래피',scripts:['latin'],weight:700,group:'script'},
+ {name:'The Girl Next Door',family:'The Girl Next Door',kind:'일상 손글씨',scripts:['latin'],weight:400,group:'script'},
+ {name:'Tillana',family:'Tillana',kind:'장식 손글씨',scripts:['latin'],weight:600,group:'script'},
+ {name:'Yellowtail',family:'Yellowtail',kind:'브러시 필기체',scripts:['latin'],weight:400,group:'script'},
+ {name:'Zeyada',family:'Zeyada',kind:'자유로운 필기체',scripts:['latin'],weight:400,group:'script'},
+ {name:'Dancing Script',family:'Dancing Script',kind:'트렌디 필기체',scripts:['latin'],weight:600,group:'script-dancing'},
+ {name:'Yellowtail',family:'Yellowtail',kind:'브러시 필기체',scripts:['latin'],weight:400,group:'script-yellowtail'},
+ {name:'Lobster',family:'Lobster',kind:'레트로 스크립트',scripts:['latin'],weight:400,group:'script-lobster'},
+ {name:'Satisfy',family:'Satisfy',kind:'캐주얼 필기체',scripts:['latin'],weight:400,group:'script-satisfy'},
+ {name:'Quicksand',family:'Quicksand',kind:'귀여운 라운드',scripts:['latin'],weight:700,group:'cute-round'},
+ {name:'Nunito',family:'Nunito',kind:'부드러운 라운드',scripts:['latin'],weight:800,group:'cute-soft'},
+ {name:'Varela Round',family:'Varela Round',kind:'둥근 미니멀',scripts:['latin'],weight:400,group:'cute-minimal'},
+ {name:'Syne',family:'Syne',kind:'트렌디 아트 디스플레이',scripts:['latin'],weight:800,group:'trendy-art'},
+ {name:'Urbanist',family:'Urbanist',kind:'트렌디 모던 산세리프',scripts:['latin'],weight:800,group:'trendy-modern'},
+ {name:'Raleway',family:'Raleway',kind:'패션 산세리프',scripts:['latin'],weight:700,group:'fashion-sans'},
+ {name:'Gloock',family:'Gloock',kind:'트렌디 고대비 세리프',scripts:['latin'],weight:400,group:'trendy-serif'},
+ {name:'Cinzel',family:'Cinzel',kind:'클래식 디스플레이 세리프',scripts:['latin'],weight:700,group:'classic-display'},
+ {name:'Monoton',family:'Monoton',kind:'네온 라인 디스플레이',scripts:['latin'],weight:400,group:'neon-display'},
+ {name:'Silkscreen',family:'Silkscreen',kind:'픽셀 디지털',scripts:['latin'],weight:700,group:'pixel-silkscreen'},
+ {name:'Major Mono Display',family:'Major Mono Display',kind:'모노 디스플레이',scripts:['latin'],weight:400,group:'mono-major'},
+ {name:'Roboto Mono',family:'Roboto Mono',kind:'현대 모노스페이스',scripts:['latin'],weight:700,group:'mono-roboto'},
+ {name:'Work Sans',family:'Work Sans',kind:'깔끔한 현대 산세리프',scripts:['latin'],weight:800,group:'sans-work'},
+ {name:'IBM Plex Sans',family:'IBM Plex Sans',kind:'에디토리얼 산세리프',scripts:['latin'],weight:700,group:'sans-plex'},
+ {name:'Merriweather',family:'Merriweather',kind:'부드러운 본문 세리프',scripts:['latin'],weight:700,group:'serif-merriweather'},
+ {name:'Bungee',family:'Bungee',kind:'영문 포스터 디스플레이',scripts:['latin'],weight:400,group:'sans-poster'},
+ {name:'Bungee Shade',family:'Bungee Shade',kind:'영문 셰이드 디스플레이',scripts:['latin'],weight:400,group:'display-shade'},
+ {name:'Righteous',family:'Righteous',kind:'영문 레트로 기하학',scripts:['latin'],weight:400,group:'retro-geometric'},
+ {name:'Orbitron',family:'Orbitron',kind:'영문 SF 기하학',scripts:['latin'],weight:700,group:'sci-fi'},
+ {name:'Press Start 2P',family:'Press Start 2P',kind:'영문 픽셀',scripts:['latin'],weight:400,group:'pixel'},
+ {name:'Special Elite',family:'Special Elite',kind:'영문 타자기',scripts:['latin'],weight:400,group:'typewriter'},
+ {name:'Permanent Marker',family:'Permanent Marker',kind:'영문 마커',scripts:['latin'],weight:400,group:'marker'},
+ {name:'Bowlby One SC',family:'Bowlby One SC',kind:'영문 둥근 블랙',scripts:['latin'],weight:400,group:'display-rounded'},
+ {name:'Alfa Slab One',family:'Alfa Slab One',kind:'영문 슬랩 세리프',scripts:['latin'],weight:400,group:'slab'},
+ {name:'DM Serif Display',family:'DM Serif Display',kind:'영문 디스플레이 세리프',scripts:['latin'],weight:400,group:'serif-dm'},
+ {name:'Fraunces',family:'Fraunces',kind:'영문 가변 세리프',scripts:['latin'],weight:700,group:'serif-fraunces'},
+ {name:'Kanit',family:'Kanit',kind:'영문 태국계 기하학 산세리프',scripts:['latin'],weight:700,group:'sans-kanit'},
+ {name:'Rajdhani',family:'Rajdhani',kind:'영문 각진 압축체',scripts:['latin'],weight:700,group:'sans-angular'},
+ {name:'Rubik Mono One',family:'Rubik Mono One',kind:'영문 모노 디스플레이',scripts:['latin'],weight:400,group:'mono-display'},
+ {name:'Josefin Sans',family:'Josefin Sans',kind:'영문 패션 산세리프',scripts:['latin'],weight:700,group:'sans-fashion'},
+ {name:'Manrope',family:'Manrope',kind:'영문 현대 산세리프',scripts:['latin'],weight:800,group:'sans-modern'},
+ {name:'Montserrat',family:'Montserrat',kind:'영문 클래식 기하학 산세리프',scripts:['latin'],weight:800,group:'sans-montserrat'},
+ {name:'Noto Sans Display',family:'Noto Sans Display',kind:'영문 디스플레이 산세리프',scripts:['latin'],weight:800,group:'sans-display'},
+ {name:'Noto Serif Display',family:'Noto Serif Display',kind:'영문 디스플레이 세리프',scripts:['latin'],weight:800,group:'serif-display-noto'},
+];
+
+
+function mulberry32(a){return function(){let t=a+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+
+function detectScript(ch){
+ return /[a-zA-Z0-9]/.test(ch)?'latin':'other';
+}
+function fontSupports(f,s){return f.scripts.includes('latin');}
+
+function fontFamilyGroup(f){
+ const g=f.group||'';
+ // 이름이 달라도 시각적으로 같은 계열은 같은 그룹으로 취급한다.
+ if(/^serif|slab|^trendy-serif|^classic-display|^serif-/.test(g)) return 'serif';
+ if(/^sans|grotesk|modern|fashion-sans|angular|sci-fi|retro-geometric/.test(g)) return 'sans';
+ if(/condensed|narrow/.test(g)) return 'condensed';
+ if(/^script|handwriting|marker/.test(g)) return 'script';
+ if(/mono|typewriter/.test(g)) return 'mono';
+ if(/cute|round|rounded/.test(g)) return 'rounded';
+ if(/pixel|silkscreen|digital/.test(g)) return 'pixel';
+ if(/display|poster|shade|neon|decorative|black|bungee|slab/.test(g)) return 'display';
+ return g;
+}
+
+function pickFonts(count,rnd){
+ const pool=[...FONTS],picked=[],usedFamilies=new Set();
+
+ // 큰 계열은 중복하지 않는다. 단, 필기체는 종류가 워낙 많으므로
+ // 한 번의 조합에서 필기체가 여러 개 들어가지는 않도록 한다.
+ while(picked.length<count&&pool.length){
+   let candidates=pool.filter(f=>!usedFamilies.has(fontFamilyGroup(f)));
+   if(!candidates.length)break;
+
+   // 첫 번째 폰트는 전체 풀에서, 이후에는 다른 계열을 우선한다.
+   const f=candidates[Math.floor(rnd()*candidates.length)];
+   picked.push(f);
+   usedFamilies.add(fontFamilyGroup(f));
+   pool.splice(pool.indexOf(f),1);
+ }
+ return picked;
+}
+function tokenize(text,mode,rnd){
+ const chars=Array.from(text),out=[];
+ if(mode==='word'){
+   let buf='';
+   for(const ch of chars){
+     buf+=ch;
+     if(/\s/.test(ch)||/[，。！？,.!?/]/.test(ch)){out.push(buf);buf='';}
+   }
+   if(buf)out.push(buf);
+   return out;
+ }
+ let i=0;
+ while(i<chars.length){
+   if(/\s/.test(chars[i])){out.push(chars[i]);i++;continue;}
+   const len=mode==='balanced'?2+Math.floor(rnd()*4):1+Math.floor(rnd()*5);
+   let part=chars.slice(i,i+len).join('');
+   while(i+len<chars.length&&/[,.!?。！？、]/.test(chars[i+len]))part+=chars[i+len++];
+   out.push(part);i+=len;
+ }
+ return out;
+}
+
+function fontForSegment(seg,picked,rnd){
+ const chars=Array.from(seg).filter(ch=>!/\s/.test(ch));
+ if(!chars.length)return picked[0];
+ const script=detectScript(chars[0]);
+ const candidates=picked.filter(f=>fontSupports(f,script));
+ return (candidates.length?candidates:picked)[Math.floor(rnd()*(candidates.length?candidates.length:picked.length))];
+}
+
+function render(){
+ const text=textEl.value;
+ if(!text.trim()){poster.hidden=true;empty.hidden=false;return}
+ poster.hidden=false;empty.hidden=true;
+
+ const rnd=mulberry32(seed);
+ const count=+$('fontCount').value;
+ const variation=+$('variation').value/100;
+ currentFonts=pickFonts(count,rnd);
+ const parts=tokenize(text,$('split').value,rnd);
+ segments=[];
+
+ // 공백만 있는 조각은 폰트를 배정하지 않고, 실제 글자 조각에는
+ // 선택된 폰트를 최소 한 번씩 순환 배정한다.
+ const contentIndexes=parts.map((part,i)=>part.trim()?i:-1).filter(i=>i>=0);
+ const shuffledFonts=[...currentFonts];
+ for(let i=shuffledFonts.length-1;i>0;i--){
+   const j=Math.floor(rnd()*(i+1));
+   [shuffledFonts[i],shuffledFonts[j]]=[shuffledFonts[j],shuffledFonts[i]];
+ }
+
+ parts.forEach((part,index)=>{
+   let font;
+   if(!part.trim()){
+     font=currentFonts[0];
+   }else{
+     // 먼저 모든 선택 폰트를 한 번씩 사용하고, 그 다음부터 랜덤.
+     const position=contentIndexes.indexOf(index);
+     font=position<shuffledFonts.length
+       ? shuffledFonts[position]
+       : shuffledFonts[Math.floor(rnd()*shuffledFonts.length)];
+   }
+   const base=+$('size').value/100;
+   const size=42*base*(1+(rnd()-.5)*.10*variation);
+   const rotate=variation===0?0:(rnd()-.5)*12*variation;
+   const weight=variation===0?font.weight:font.weight+(rnd()>.55&&font.weight<900?100:0);
+   const italic=variation===0?'normal':(rnd()<.14*variation?'italic':'normal');
+   const letter=variation===0?0:(rnd()-.5)*.08*variation;
+   segments.push({text:part,font,size,rotate,weight,italic,letter,index});
+ });
+
+ poster.innerHTML='';
+ const line=document.createElement('div');
+ line.className='mixed-line';
+
+ segments.forEach(seg=>{
+   const el=document.createElement('span');
+   el.className='seg';
+   el.dataset.index=seg.index;
+   el.textContent=seg.text;
+   el.style.fontFamily='"'+seg.font.family+'",Pretendard,sans-serif';
+   el.style.fontSize=seg.size+'px';
+   el.style.fontWeight=seg.weight;
+   el.style.fontStyle=seg.italic;
+   el.style.letterSpacing=seg.letter+'em';
+   el.style.transform='rotate('+seg.rotate+'deg)';
+   el.addEventListener('click',()=>highlight(seg.index));
+   line.appendChild(el);
+ });
+ poster.appendChild(line);
+ updateFontList();
+}
+function highlight(index){
+ document.querySelectorAll('.seg').forEach(e=>e.classList.toggle('active',+e.dataset.index===index));
+ document.querySelectorAll('.font-item').forEach(e=>e.classList.remove('active'));
+ const seg=segments[index];if(!seg)return;
+ const item=document.querySelector('[data-font="'+CSS.escape(seg.font.name)+'"]');
+ if(item)item.classList.add('active');
+}
+
+function updateFontList(){
+ const box=$('fontItems');box.innerHTML='';
+ const used=new Map();
+ segments.forEach(s=>{
+   if(!s.text.trim())return;
+   if(!used.has(s.font.name))used.set(s.font.name,[]);
+   used.get(s.font.name).push(s.text);
+ });
+ let n=0;
+ currentFonts.forEach(font=>{
+   const list=used.get(font.name);
+   if(!list)return;
+   n++;
+   const item=document.createElement('div');
+   item.className='font-item';
+   item.dataset.font=font.name;
+   item.style.fontFamily='"'+font.family+'",sans-serif';
+   const examples=list.slice(0,4).join(' · ');
+   item.innerHTML='<span class="font-num">'+String(n).padStart(2,'0')+'</span><div class="font-info"><div class="font-name">'+font.name+'</div><div class="font-script">'+font.kind+' · '+examples+'</div></div>';
+   item.addEventListener('click',()=>{
+     document.querySelectorAll('.font-item').forEach(e=>e.classList.remove('active'));
+     item.classList.add('active');
+     document.querySelectorAll('.seg').forEach(e=>e.classList.toggle('active',segments[+e.dataset.index].font.name===font.name));
+   });
+   box.appendChild(item);
+ });
+ $('segmentCount').textContent=segments.filter(s=>s.text.trim()).length+'개 조각';
+}
+
+function labels(){
+ $('fontCountVal').textContent=$('fontCount').value+'개';
+ $('variationVal').textContent=$('variation').value+'%';
+ $('sizeVal').textContent=$('size').value+'%';
+}
+
+async function savePNG(){
+ if(!segments.length)return;
+ await document.fonts.ready;
+ const size=1200;
+ const c=document.createElement('canvas');c.width=size;c.height=size;
+ const x=c.getContext('2d');
+ x.fillStyle='#f4f1e9';x.fillRect(0,0,size,size);
+ x.fillStyle='#151515';x.textAlign='left';x.textBaseline='alphabetic';
+
+ const padding=110,maxW=size-padding*2;
+ let y=170,row=[],rowW=0;
+ function drawRow(){
+   let xx=(size-rowW)/2;
+   row.forEach(a=>{
+     x.save();x.translate(xx+a.tw/2,y);
+     x.rotate(a.seg.rotate*Math.PI/180);
+     x.font=a.seg.italic+' '+a.seg.weight+' '+(a.seg.size*1.55)+'px "'+a.seg.font.family+'",sans-serif';
+     x.fillText(a.seg.text,0,0);x.restore();xx+=a.tw;
+   });
+   y+=Math.max(...row.map(a=>a.h))*1.2;
+   row=[];rowW=0;
+ }
+ for(const seg of segments){
+   x.font=seg.italic+' '+seg.weight+' '+(seg.size*1.55)+'px "'+seg.font.family+'",sans-serif';
+   const tw=x.measureText(seg.text).width;
+   if(row.length&&rowW+tw>maxW)drawRow();
+   row.push({seg,tw,h:seg.size*1.55});rowW+=tw;
+ }
+ if(row.length)drawRow();
+ const a=document.createElement('a');
+ a.download='mixed-type.png';a.href=c.toDataURL('image/png');a.click();
+}
+
+$('text').addEventListener('input',()=>{seed=Date.now();render()});
+['fontCount','split','variation','size'].forEach(id=>{
+ $(id).addEventListener('input',()=>{labels();render()});
+ $(id).addEventListener('change',()=>{labels();render()});
+});
+$('random').addEventListener('click',()=>{
+ seed=Date.now()+Math.floor(Math.random()*1000000);
+ render();
+});
+$('reset').addEventListener('click',()=>{
+ textEl.value='STRANGE WORLD';
+ $('fontCount').value=3;
+ $('split').value='balanced';
+ $('variation').value=0;
+ $('size').value=100;
+ seed=Date.now();
+ labels();render();
+});
+$('save').addEventListener('click',savePNG);
+labels();render();
+</script>
+</body>
+</html>
