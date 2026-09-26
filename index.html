@@ -29,8 +29,11 @@ h1{font-size:25px;line-height:1.1;margin:0;font-weight:900;letter-spacing:-.05em
 .upload input{display:none}
 textarea{width:100%;min-height:110px;border:1px solid #ddd8d0;border-radius:15px;background:#fff;padding:14px;font:600 17px/1.5 Pretendard,sans-serif;resize:vertical;outline:none}
 textarea:focus,select:focus,input:focus{border-color:#111}
-.color-control{margin-top:10px}
+.color-controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;align-items:end}
+.color-control{margin-top:0}
 input[type=color]{display:block;width:100%;height:48px;margin-top:6px;padding:4px;border:1px solid #ddd8d0;border-radius:13px;background:#fff;cursor:pointer}
+.transparent-toggle{display:flex;align-items:center;gap:7px;grid-column:1/-1;font-size:12px;color:#777}
+.transparent-toggle input{width:16px;height:16px;margin:0}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
 label{display:block;font-size:13px;color:#777;line-height:1.4}
 label.full{grid-column:1/-1}
@@ -90,9 +93,18 @@ button{border-width:1px;font-weight:500}
     <label class="full">문구
       <textarea id="text" placeholder="예: STRANGE WORLD / 이상한 세계 / 不思議な世界 / 奇怪的世界">STRANGE WORLD</textarea>
     </label>
-    <label class="color-control">텍스트 색상
-      <input id="textColor" type="color" value="#111111">
-    </label>
+    <div class="color-controls">
+      <label class="color-control">텍스트 색상
+        <input id="textColor" type="color" value="#111111">
+      </label>
+      <label class="color-control">배경 색상
+        <input id="bgColor" type="color" value="#000000">
+      </label>
+      <label class="transparent-toggle">
+        <input id="bgTransparent" type="checkbox" checked>
+        <span>배경 투명</span>
+      </label>
+    </div>
 
     <div class="grid">
       <label>사용 폰트 수 <span class="val" id="fontCountVal">3개</span>
@@ -324,6 +336,7 @@ function render(){
  const text=textEl.value;
  if(!text.trim()){poster.hidden=true;empty.hidden=false;return}
  empty.textContent='';
+ poster.style.background=$('bgTransparent').checked?'transparent':$('bgColor').value;
  poster.hidden=false;empty.hidden=true;
 
  const rnd=mulberry32(seed);
@@ -452,6 +465,10 @@ async function savePNG(){
   c.height=Math.round(posterRect.height*scale);
   const x=c.getContext('2d');
   x.clearRect(0,0,c.width,c.height);
+  if(!$('bgTransparent').checked){
+    x.fillStyle=$('bgColor').value;
+    x.fillRect(0,0,c.width,c.height);
+  }
   segments.forEach(seg=>{
     const el=poster.querySelector('[data-index="'+seg.index+'"]');
     if(!el)return;
@@ -482,6 +499,8 @@ async function savePNG(){
 }
 $('text').addEventListener('input',()=>{seed=Date.now();render()});
 $('textColor').addEventListener('input',render);
+$('bgColor').addEventListener('input',render);
+$('bgTransparent').addEventListener('change',render);
 ['fontCount','split','variation','size'].forEach(id=>{
  $(id).addEventListener('input',()=>{labels();render()});
  $(id).addEventListener('change',()=>{labels();render()});
