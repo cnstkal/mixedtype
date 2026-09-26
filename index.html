@@ -372,7 +372,7 @@ async function loadGoogleCatalog(){
    list.forEach(item=>{
      if(!item.family||existing.has(item.family)||!item.subsets?.includes('latin'))return;
      const cat=item.category||'sans-serif';
-     const group=cat==='serif'?'serif':cat==='handwriting'?'script':cat==='monospace'?'mono':cat==='display'?'display':'sans';
+     const group='google-'+item.family;
      const weight=item.variants?.map(v=>parseInt(v,10)).filter(Number.isFinite).sort((a,b)=>b-a)[0]||400;
      FONTS.push({name:item.family,family:item.family,kind:'Google Fonts · '+cat,scripts:['latin'],weight,group,source:'google'});
      existing.add(item.family);
@@ -459,6 +459,11 @@ function fontForSegment(seg,picked,rnd){
 function render(){
  const text=textEl.value;
  if(!text.trim()){poster.hidden=true;empty.hidden=false;return}
+ if(fontMode==='custom'&&!customFonts.length){
+   poster.hidden=true;empty.hidden=false;empty.textContent='내 폰트를 먼저 등록해줘.';
+   return;
+ }
+ empty.textContent='';
  poster.hidden=false;empty.hidden=true;
 
  const rnd=mulberry32(seed);
