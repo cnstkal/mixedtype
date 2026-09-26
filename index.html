@@ -321,7 +321,14 @@ function render(){
  currentFonts=pickFonts(usableCount,rnd);
  if(usableCount<count){
    $('fontCount').value=usableCount;
- } segments=[];
+ }
+ // 선택한 폰트 수보다 실제 글자 조각이 적으면 문자 단위로 분해해서
+ // 선택한 폰트가 모두 결과물에 최소 한 번씩 사용되도록 한다.
+ const partContentCount=parts.filter(part=>part.trim()).length;
+ if(partContentCount<usableCount){
+   parts=Array.from(text);
+ }
+ segments=[];
 
  // 공백만 있는 조각은 폰트를 배정하지 않고, 실제 글자 조각에는
  // 선택된 폰트를 최소 한 번씩 순환 배정한다.
