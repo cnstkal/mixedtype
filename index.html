@@ -414,38 +414,50 @@ async function savePNG(){
  if(!segments.length)return;
  const btn=$('save');btn.disabled=true;btn.textContent='저장 중…';
  try{
- await document.fonts.ready;
- const size=1200;
- const c=document.createElement('canvas');c.width=size;c.height=size;
- const x=c.getContext('2d');
- x.fillStyle='#f4f1e9';x.fillRect(0,0,size,size);
- x.fillStyle='#151515';x.textAlign='left';x.textBaseline='alphabetic';
-
- const padding=110,maxW=size-padding*2;
- let y=170,row=[],rowW=0;
- function drawRow(){
-   let xx=(size-rowW)/2;
-   row.forEach(a=>{
-     x.save();x.translate(xx+a.tw/2,y);
-     x.rotate(a.seg.rotate*Math.PI/180);
-     x.font=a.seg.italic+' '+a.seg.weight+' '+(a.seg.size*1.55)+'px "'+a.seg.font.family+'",sans-serif';
-     x.fillText(a.seg.text,0,0);x.restore();xx+=a.tw;
-   });
-   y+=Math.max(...row.map(a=>a.h))*1.2;
-   row=[];rowW=0;
+  await document.fonts.ready;
+  const previewRect=poster.getBoundingClientRect();
+  const base=poster.getBoundingClientRect();
+  const scale=3;
+  const size=Math.max(1,Math.round(base.width*scale));
+  const c=document.createElement('canvas');c.width=size;c.height=size;
+  const x=c.getContext('2d');
+  x.clearRect(0,0,size,size);
+  x.textAlign='left';x.textBaseline='alphabetic';
+  const posterRect=poster.getBoundingClientRect();
+  const line=poster.querySelector('.mixed-line');
+  const lineRect=line?line.getBoundingClientRect():posterRect;
+  const posterStyle=getComputedStyle(poster);
+  const offsetX=posterRect.left,offsetY=posterRect.top;
+  segments.forEach(seg=>{
+    const el=poster.querySelector('[data-index="'+seg.index+'"]');
+    if(!el)return;
+    const r=el.getBoundingClientRect();
+    const cs=getComputedStyle(el);
+    const centerX=(r.left+r.width/2-offsetX)*scale;
+    const baselineY=(r.top+r.height*.78-offsetY)*scale;
+    x.save();
+    x.translate(centerX,baselineY);
+    const rotate=seg.rotate*Math.PI/180;
+    x.rotate(rotate);
+    const fontSize=parseFloat(cs.fontSize)*scale;
+    x.font=cs.fontStyle+' '+cs.fontWeight+' '+fontSize+'px "'+seg.font.family+'",sans-serif';
+    x.fillStyle=cs.color;
+    x.textAlign='center';
+    x.textBaseline='alphabetic';
+    x.fillText(seg.text,0,0);
+    x.restore();
+  });
+  const a=document.createElement('a');
+  a.download='mixed-type.png';
+  a.href=c.toDataURL('image/png');
+  a.style.display='none';document.body.appendChild(a);a.click();a.remove();
+ }catch(e){
+  console.warn('PNG export failed',e);
+  alert('PNG 저장에 실패했어요. 잠시 후 다시 시도해 주세요.')
+ }finally{
+  btn.disabled=false;btn.textContent='PNG 저장'
  }
- for(const seg of segments){
-   x.font=seg.italic+' '+seg.weight+' '+(seg.size*1.55)+'px "'+seg.font.family+'",sans-serif';
-   const tw=x.measureText(seg.text).width;
-   if(row.length&&rowW+tw>maxW)drawRow();
-   row.push({seg,tw,h:seg.size*1.55});rowW+=tw;
- }
- if(row.length)drawRow();
- const a=document.createElement('a');
- a.download='mixed-type.png';a.href=c.toDataURL('image/png');a.style.display='none';document.body.appendChild(a);a.click();a.remove();
- }catch(e){console.warn('PNG export failed',e);alert('PNG 저장에 실패했어요. 잠시 후 다시 시도해 주세요.')}finally{btn.disabled=false;btn.textContent='PNG 저장'}
 }
-
 $('text').addEventListener('input',()=>{seed=Date.now();render()});
 ['fontCount','split','variation','size'].forEach(id=>{
  $(id).addEventListener('input',()=>{labels();render()});
